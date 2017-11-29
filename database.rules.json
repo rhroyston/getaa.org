@@ -1,0 +1,78 @@
+{
+  "rules": {
+    "geofire": {
+      ".read": true,
+      ".indexOn": ["g"],
+      "$key": {
+        ".write": true,
+        ".validate": "newData.hasChildren(['g', 'l']) && newData.getPriority().length <= 22 && newData.getPriority().length > 0",
+        "g": {
+          ".validate": "newData.val() == newData.parent().getPriority()"
+        },
+        "l": {
+          "0": {
+            ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+          },
+          "1": {
+            ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "states": {
+      ".read": true,
+      ".write": true,
+      //".write": "root.child('users').child(auth.uid).child('isAdmin').val() == true",
+      "$states": {
+        ".validate": "data.exists()"
+      }
+    },
+    "markup": {
+      //".read": true,
+      //".write": true,
+      "admin": {
+        ".read": "root.child('users').child(auth.uid).child('isAdmin').val() == true"
+      },
+      "administrator": {
+        ".read": "root.child('users').child(auth.uid).child('isAdmin').val() == true"
+      },
+      "meetingTemplate": {
+        ".read": "root.child('users').child(auth.uid).child('isAdmin').val() == true"
+      },
+      "meetings": {
+        ".read": "root.child('users').child(auth.uid).child('isAdmin').val() == true"
+      },
+      "import": {
+        ".read": "root.child('users').child(auth.uid).child('isAdmin').val() == true"
+      },
+      "login": {
+        ".read": true
+      },
+      "verify": {
+        ".read": true
+      },
+      "$sections": {
+        ".write": "root.child('users').child(auth.uid).child('isAdmin').val() == true"
+      }
+    },
+    "meetings": {
+      ".read": true,
+      ".write": true,
+      "$meeting": {
+        ".write": "root.child('users').child(auth.uid).child('isAdmin').val() == true"
+      }
+    },
+    "users": {
+      ".read": true,
+      "$user_id": {
+        ".write": "$user_id === auth.uid"
+      }
+    }
+  }
+}

@@ -3,15 +3,34 @@ https://getaa.org v0.1 - Find Today's AA Meetings
 Created by Ron Royston, https://rack.pub
 https://github.com/rhroyston/getaa.org
 License: MIT
-
-control.topCenter.add.(html)
 */
 
 //Revealing Module Pattern (Public & Private) w getAA namespace
 var getAA = (function() { 
+    
+    // FIREBASE CONFIG
+    var config = {
+        apiKey: "AIzaSyD2bqWZLX95w93ylQLaGjpg9kcMAuCOcn0",
+        authDomain: "getaa-ff968.firebaseapp.com",
+        databaseURL: "https://getaa-ff968.firebaseio.com",
+        storageBucket: "getaa-ff968.appspot.com",
+    };
+    var firebase = window.firebase;
+    
+    //INITIALIZE FIREBASE WEB APP
+    firebase.initializeApp(config);
+    var auth = firebase.auth();   
+  
     var pub = {};
-    var ref = new Firebase("https://ack.firebaseio.com");
-    var geofire = new GeoFire(ref.child("geofire"));
+    var ref = firebase.database().ref();
+
+    var firebaseRef = firebase.database().ref('geofire');
+    
+    // Create a new GeoFire instance at the random Firebase location
+    var GeoFire = window.GeoFire;
+    var geofire = new GeoFire(firebaseRef);
+    
+    
     var meetings = ref.child("meetings");
     var markers = [];
     var sites = [];
@@ -21,7 +40,6 @@ var getAA = (function() {
     var timer = 10; //in milliseconds
     var radius = 96; //in kilometers
 
-    //var weekdays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
     var menuDiv = doc.getElementById('menu');
     var menuButton = doc.querySelector ('.actionButtonTop');
     var menuIcon = doc.querySelector ('.menuIcon');
@@ -519,6 +537,7 @@ var getAA = (function() {
     }
     
     function loadQuery(lat,lng,today){
+        //console.log('loadQuery function fired with ' + lat,lng,today);
         var geoKeys = [];
         var records=[];
         
@@ -528,12 +547,15 @@ var getAA = (function() {
             radius: radius
         });
         
-        var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location) {
+        var onKeyEnteredRegistration = geoQuery.on("key_entered", function(key, location, distance) {
             geoKeys.push(key);
+            //console.log('geoQuery event KEY ENTERED with key: ' + key);
         });
     
         // GeoKeys now in array
         var onReadyRegistration = geoQuery.on("ready", function() {
+            
+            //console.log('geoQuery event READY');
             
             if(geoKeys.length > 0){
                 toastUp('Fetching Meetings...');
@@ -543,7 +565,7 @@ var getAA = (function() {
                     var todaysMeetings = dayFilter(today);
                     drop(todaysMeetings);
                 }, function(err) {
-                  console.log(err); // Error!
+                  //console.log(err); // Error!
                 });
             } else {
                 toastUp('No area meetings found.  You are encouraged to volunteer to add them.  Click <a href="/admin">Meetings Manager</a> to become a site administrator.');
@@ -622,9 +644,9 @@ var getAA = (function() {
         data.style.fontSize = "10px";
         data.style.fontFamily = '"Roboto", sans-serif';
         controlDiv.appendChild(data);
-    
+        
         google.maps.event.addDomListener(data, 'click', function() {
-            window.location.href = "mailto:admin@getaa.org";
+            window.location.href = "//github.com/rhroyston/getaa.org/issues";
         });
     }    
     

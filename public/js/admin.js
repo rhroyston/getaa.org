@@ -116,11 +116,6 @@ var onComplete = function(error) {
     if (error) {
         tools.toast('ERROR: Synchronization failed ' + error);
     } else {
-        
-
-        //window.location.href = '../admin';
-        
-        
         tools.toast('SUCCESS: Synchronization succeeded');
     }
 };
@@ -368,9 +363,6 @@ function loadDiv(div,id){
                 $('#' + div).html(snap.val());
                 var dropzone = document.getElementById('dropzone');
                 var input = document.getElementById('files');
-                
-                //dropzone.addEventListener('dragover', handleDragOver, false);
-                //dropzone.addEventListener('drop', handleFileSelect, false);
                 
                 dropzone.addEventListener("dragenter", dragenter, false);
                 dropzone.addEventListener("dragover", dragover, false);
@@ -1015,7 +1007,7 @@ function geoCoder(rec){
             rec.longitude = myArray[1];
             writeFirebase(rec);
         } else {
-          //console.log('ERROR Geolocating ' + rec.key);
+        //console.log('ERROR Geolocating ' + rec.key);
 
         var t = document.createTextNode('ERROR Geolocating ' + rec.key);
         x.className = "output";
